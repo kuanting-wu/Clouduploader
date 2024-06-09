@@ -5,8 +5,14 @@ help(){
     exit 0
 }
 
-if [ "$1" == "help" ]; then
+if [ -f "$1" ]; then
+    aws s3 cp $1 s3://$2
+
+elif [ "$1" == "help" ]; then
     help
+
+else
+    echo "file not found"
 fi
 
-aws s3 mv $1 s3://$2
+
