@@ -5,7 +5,7 @@ help(){
     exit 1;
 }
 
-while getopts "f:t:" arg; do
+while getopts ":f:t:" arg; do
     case $arg in
         f)
         if [ -f "$OPTARG" ]; then
