@@ -1,18 +1,30 @@
 #!/bin/bash
 
 help(){
-    echo "clouduploader {from: path/file} {to: bucketname/path}"
-    exit 0
+    echo "clouduploader {from: -f path/file} {to: -t bucketname/path}" 1>&2;
+    exit 1;
 }
 
-if [ -f "$1" ]; then
-    aws s3 cp $1 s3://$2
+while getopts "f:t:" arg; do
+    case $arg in
+        f)
+        if [ -f "$OPTARG" ]; then
+            multi+=("$OPTARG")
+        else
+            echo "$OPTARG file not found"
+        fi
+        ;;
+        t)
+        to=$OPTARG;;
+        ?)
+        help;;
+    esac
+done
 
-elif [ "$1" == "help" ]; then
-    help
+for val in "${multi[@]}"; do
+    aws s3 cp $val s3://$to
+done
 
-else
-    echo "file not found"
-fi
+
 
 
